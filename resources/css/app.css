@@ -1,0 +1,61 @@
+/* Global Button Theme for FrontStore */
+.btn {
+    background: linear-gradient(90deg, #ffd814 0%, #ffecb3 100%);
+    border: none;
+    padding: 12px 32px;
+    border-radius: 24px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #22223b;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: background 0.2s, box-shadow 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.btn:disabled {
+    background: #f3f4f6;
+    color: #b0b0b0;
+    cursor: not-allowed;
+}
+.btn:hover:not(:disabled) {
+    background: #ffe066;
+    box-shadow: 0 4px 16px rgba(255,216,20,0.12);
+}
+.btn-primary {
+    background: linear-gradient(90deg, #ffd814 0%, #ffecb3 100%);
+    color: #22223b;
+}
+.btn-secondary {
+    background: #fff;
+    color: #22223b;
+    border: 1.5px solid #ffd814;
+}
+.btn-outline {
+    background: transparent;
+    color: #22223b;
+    border: 1.5px solid #ffd814;
+}
+.btn-sm {
+    padding: 6px 18px;
+    font-size: 0.95rem;
+    border-radius: 16px;
+}
+.btn-lg {
+    padding: 16px 40px;
+    font-size: 1.25rem;
+    border-radius: 28px;
+}
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
