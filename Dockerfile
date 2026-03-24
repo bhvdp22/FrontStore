@@ -40,6 +40,7 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 # Enable Apache mod_rewrite and set permissions
 RUN a2enmod rewrite
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN php artisan storage:link
 
 # Expose port 80
 EXPOSE 80
