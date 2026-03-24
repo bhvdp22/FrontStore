@@ -123,22 +123,17 @@ class PaymentController extends Controller
                 return response()->json(['success' => false, 'message' => 'Cart is empty.'], 400);
             }
 
-            // 4. Calculate Total SECURELY (Server Side)
-            $amountRupees = 0;
-            foreach ($cart as $item) {
-                // FIX: Remove commas if price is stored as "20,000"
-                $cleanPrice = str_replace(',', '', $item['price']); 
-                
-                \Log::debug('Cart item debug', [
-                    'name' => $item['name'] ?? 'unknown',
-                    'original_price' => $item['price'] ?? 'null',
-                    'clean_price' => $cleanPrice,
-                    'quantity' => $item['quantity'] ?? 0,
-                    'line_total' => ((float)$cleanPrice * (int)$item['quantity'])
-                ]);
-                
-                $amountRupees += ((float)$cleanPrice * (int)$item['quantity']);
-            }
+            // 4. Calculate Total SECURELY (Server Side) using FeeCalculator (includes GST & Platform Fee)
+            $feeCalculator = new \App\Services\FeeCalculator();
+            $fees = $feeCalculator->calculateForCart($cart);
+            $amountRupees = $fees['total'];
+            
+            \Log::debug('Cart fee calculation', [
+                'subtotal' => $fees['subtotal'],
+                'tax_amount' => $fees['tax_amount'],
+                'platform_fee' => $fees['platform_fee'],
+                'grand_total' => $fees['total']
+            ]);
 
             // 5. Convert to Paise (₹1 = 100 paise)
             $amountInPaise = (int) round($amountRupees * 100);
