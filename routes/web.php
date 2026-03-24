@@ -36,6 +36,10 @@ use App\Http\Controllers\AdminReviewController;
 use App\Http\Controllers\AdminPayoutController;
 use App\Http\Controllers\NotificationController;
 
+Route::get('/run-migrations', function () {
+    \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+    return 'Migrations completed successfully!';
+});
 
 Route::get('/setsession', function(){
     session(['loginusername' => 'Bhavdeep Mangukiya']);
