@@ -8,7 +8,7 @@
         <p style="color: #555;">Track incoming payments and revenue from orders.</p>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;">
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-bottom: 30px;">
         <x-stat-card 
             title="Total Revenue Collected"
             value="₹{{ number_format($totalRevenue, 2) }}"
@@ -19,6 +19,13 @@
             title="Pending Payments"
             value="₹{{ number_format($pendingAmount, 2) }}"
             valueColor="#c40000"
+        />
+
+        <x-stat-card 
+            title="Refunds & Deductions"
+            value="-₹{{ number_format($totalRefunds, 2) }}"
+            valueColor="#c40000"
+            subtitle="from approved returns"
         />
 
         <x-stat-card 

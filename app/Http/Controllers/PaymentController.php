@@ -55,13 +55,14 @@ class PaymentController extends Controller
 
         $nextPayoutDate = $seller ? (Payout::getNextPayoutDate($seller->id) ?? 'N/A') : 'N/A';
         $payableBalance = $seller ? Payout::getPayableBalance($seller->id) : 0;
+        $totalRefunds = $seller ? Payout::getTotalRefundDeductions($seller->id) : 0;
         $totalPaidOut = $seller ? Payout::where('seller_id', $seller->id)
             ->where('status', 'completed')
             ->sum('net_amount') : 0;
 
         return view('payments.index', compact(
             'payments', 'totalRevenue', 'pendingAmount',
-            'payouts', 'nextPayoutDate', 'payableBalance', 'totalPaidOut'
+            'payouts', 'nextPayoutDate', 'payableBalance', 'totalPaidOut', 'totalRefunds'
         ));
     }
 

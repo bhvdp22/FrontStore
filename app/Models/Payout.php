@@ -119,7 +119,32 @@ class Payout extends Model
     }
 
     /**
-     * Get total payable balance for seller (all-time delivered earnings minus all-time ad spend minus already paid out)
+     * Get total refund deductions for a seller (returns that have been approved or higher)
+     */
+    public static function getTotalRefundDeductions(int $sellerId): float
+    {
+        $returns = ProductReturn::with('order')
+            ->where('seller_id', $sellerId)
+            ->whereIn('status', [
+                'approved', 'pickup_scheduled', 'picked_up', 'received', 
+                'inspected', 'refund_initiated', 'refund_completed', 'closed'
+            ])
+            ->get();
+            
+        $totalDeductions = 0;
+        foreach ($returns as $return) {
+            if ($return->order && $return->order->quantity > 0) {
+                // Calculate how much seller earnings need to be reversed based on quantity returned
+                $earningsPerItem = $return->order->seller_earnings / $return->order->quantity;
+                $totalDeductions += ($earningsPerItem * $return->quantity);
+            }
+        }
+        
+        return $totalDeductions;
+    }
+
+    /**
+     * Get total payable balance for seller (all-time delivered earnings minus all-time ad spend minus returns minus payouts)
      */
     public static function getPayableBalance(int $sellerId): float
     {
@@ -134,8 +159,10 @@ class Payout extends Model
         $totalPaidOut = (float) self::where('seller_id', $sellerId)
             ->whereIn('status', ['approved', 'completed'])
             ->sum('net_amount');
+            
+        $totalRefunds = self::getTotalRefundDeductions($sellerId);
 
-        return max(0, $totalEarnings - $totalAdSpend - $totalPaidOut);
+        return max(0, $totalEarnings - $totalAdSpend - $totalRefunds - $totalPaidOut);
     }
 
     /**
