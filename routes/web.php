@@ -37,8 +37,34 @@ use App\Http\Controllers\AdminPayoutController;
 use App\Http\Controllers\NotificationController;
 
 Route::get('/run-migrations', function () {
-    \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-    return 'Migrations completed successfully!';
+    if (!\Illuminate\Support\Facades\Schema::hasTable('payouts')) {
+        \Illuminate\Support\Facades\Schema::create('payouts', function (\Illuminate\Database\Schema\Blueprint $table) {
+            $table->id();
+            $table->string('payout_id')->unique();
+            $table->unsignedBigInteger('seller_id');
+            $table->decimal('amount', 12, 2);
+            $table->decimal('ad_deductions', 12, 2)->default(0);
+            $table->decimal('net_amount', 12, 2);
+            $table->string('status')->default('pending');
+            $table->date('period_start');
+            $table->date('period_end');
+            $table->string('bank_name')->nullable();
+            $table->string('bank_account')->nullable();
+            $table->string('ifsc_code')->nullable();
+            $table->string('transaction_reference')->nullable();
+            $table->text('admin_notes')->nullable();
+            $table->text('rejection_reason')->nullable();
+            $table->timestamp('approved_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
+            $table->timestamp('rejected_at')->nullable();
+            $table->unsignedBigInteger('approved_by')->nullable();
+            $table->timestamps();
+
+            $table->foreign('seller_id')->references('id')->on('user')->onDelete('cascade');
+        });
+        return 'Payouts table perfectly created!';
+    }
+    return 'Payouts table already exists!';
 });
 
 Route::get('/setsession', function(){
