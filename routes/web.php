@@ -35,13 +35,35 @@ use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AdminReviewController;
 Route::get('/run-migrations', function () {
     $log = [];
+
+    // Surgical Patch: The manual SQL dump appears severely fragmented. 
+    // If seller_id is missing, we explicitly force-add all critical fee fields, ignoring standard migrations.
+    try {
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('orders', 'seller_id')) {
+            \Illuminate\Support\Facades\Schema::table('orders', function ($table) {
+                // Ignore errors inside this closure if a singular column already exists
+                if (!\Illuminate\Support\Facades\Schema::hasColumn('orders', 'seller_id')) $table->unsignedBigInteger('seller_id')->nullable();
+                if (!\Illuminate\Support\Facades\Schema::hasColumn('orders', 'subtotal')) $table->decimal('subtotal', 10, 2)->default(0);
+                if (!\Illuminate\Support\Facades\Schema::hasColumn('orders', 'tax_rate')) $table->decimal('tax_rate', 5, 2)->default(0);
+                if (!\Illuminate\Support\Facades\Schema::hasColumn('orders', 'tax_amount')) $table->decimal('tax_amount', 10, 2)->default(0);
+                if (!\Illuminate\Support\Facades\Schema::hasColumn('orders', 'platform_fee')) $table->decimal('platform_fee', 10, 2)->default(0);
+                if (!\Illuminate\Support\Facades\Schema::hasColumn('orders', 'commission_rate')) $table->decimal('commission_rate', 5, 2)->default(0);
+                if (!\Illuminate\Support\Facades\Schema::hasColumn('orders', 'commission_amount')) $table->decimal('commission_amount', 10, 2)->default(0);
+                if (!\Illuminate\Support\Facades\Schema::hasColumn('orders', 'seller_earnings')) $table->decimal('seller_earnings', 10, 2)->default(0);
+                if (!\Illuminate\Support\Facades\Schema::hasColumn('orders', 'grand_total')) $table->decimal('grand_total', 10, 2)->default(0);
+            });
+            $log[] = "Surgically patched orders table columns.";
+        }
+    } catch (\Exception $e) {
+        $log[] = "Surgical patch error: " . $e->getMessage();
+    }
+
     $files = glob(database_path('migrations/*.php'));
     sort($files);
     
     foreach ($files as $file) {
         $migrationName = str_replace('.php', '', basename($file));
         
-        // Skip if already recorded in the database
         if (\Illuminate\Support\Facades\DB::table('migrations')->where('migration', $migrationName)->exists()) {
             continue;
         }
@@ -53,8 +75,6 @@ Route::get('/run-migrations', function () {
             ]);
             $log[] = "Successfully migrated: $migrationName";
         } catch (\Exception $e) {
-            // If it crashes (e.g. table/column already exists from a manual SQL dump),
-            // we forcefully mark it as migrated to fix the out-of-sync tracker!
             \Illuminate\Support\Facades\DB::table('migrations')->insertOrIgnore([
                 'migration' => $migrationName,
                 'batch' => (\Illuminate\Support\Facades\DB::table('migrations')->max('batch') ?? 0) + 1
@@ -63,7 +83,7 @@ Route::get('/run-migrations', function () {
         }
     }
     
-    return response()->json(['message' => 'Self-healing complete!', 'log' => $log]);
+    return response()->json(['message' => 'Self-healing & Surgical Patch complete!', 'log' => $log]);
 });
 
 Route::get('/setsession', function(){
