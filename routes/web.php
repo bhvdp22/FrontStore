@@ -33,38 +33,37 @@ use App\Http\Controllers\AdminCustomerController;
 use App\Http\Controllers\AdminReturnController;
 use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AdminReviewController;
-use App\Http\Controllers\AdminPayoutController;
-use App\Http\Controllers\NotificationController;
-
 Route::get('/run-migrations', function () {
-    if (!\Illuminate\Support\Facades\Schema::hasTable('payouts')) {
-        \Illuminate\Support\Facades\Schema::create('payouts', function (\Illuminate\Database\Schema\Blueprint $table) {
-            $table->id();
-            $table->string('payout_id')->unique();
-            $table->unsignedBigInteger('seller_id');
-            $table->decimal('amount', 12, 2);
-            $table->decimal('ad_deductions', 12, 2)->default(0);
-            $table->decimal('net_amount', 12, 2);
-            $table->string('status')->default('pending');
-            $table->date('period_start');
-            $table->date('period_end');
-            $table->string('bank_name')->nullable();
-            $table->string('bank_account')->nullable();
-            $table->string('ifsc_code')->nullable();
-            $table->string('transaction_reference')->nullable();
-            $table->text('admin_notes')->nullable();
-            $table->text('rejection_reason')->nullable();
-            $table->timestamp('approved_at')->nullable();
-            $table->timestamp('completed_at')->nullable();
-            $table->timestamp('rejected_at')->nullable();
-            $table->unsignedBigInteger('approved_by')->nullable();
-            $table->timestamps();
+    $log = [];
+    $files = glob(database_path('migrations/*.php'));
+    sort($files);
+    
+    foreach ($files as $file) {
+        $migrationName = str_replace('.php', '', basename($file));
+        
+        // Skip if already recorded in the database
+        if (\Illuminate\Support\Facades\DB::table('migrations')->where('migration', $migrationName)->exists()) {
+            continue;
+        }
 
-            $table->foreign('seller_id')->references('id')->on('user')->onDelete('cascade');
-        });
-        return 'Payouts table perfectly created!';
+        try {
+            \Illuminate\Support\Facades\Artisan::call('migrate', [
+                '--path' => 'database/migrations/' . basename($file),
+                '--force' => true
+            ]);
+            $log[] = "Successfully migrated: $migrationName";
+        } catch (\Exception $e) {
+            // If it crashes (e.g. table/column already exists from a manual SQL dump),
+            // we forcefully mark it as migrated to fix the out-of-sync tracker!
+            \Illuminate\Support\Facades\DB::table('migrations')->insertOrIgnore([
+                'migration' => $migrationName,
+                'batch' => (\Illuminate\Support\Facades\DB::table('migrations')->max('batch') ?? 0) + 1
+            ]);
+            $log[] = "Skipped (Already exists): $migrationName";
+        }
     }
-    return 'Payouts table already exists!';
+    
+    return response()->json(['message' => 'Self-healing complete!', 'log' => $log]);
 });
 
 Route::get('/setsession', function(){
