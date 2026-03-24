@@ -114,7 +114,8 @@ class DashboardController extends Controller
             'nextPayoutDate',
             'totalProducts',
             'lowStockProducts',
-            'salesPercentage'
+            'salesPercentage',
+            'seller'
         ));
     }
 

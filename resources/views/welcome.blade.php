@@ -199,7 +199,7 @@
             <div class="submenu" id="inventorySub">
                 <a href="/products" class="menu-item">Manage Inventory</a>
                 
-                @if(Auth::check() && Auth::user()->status == 'active')
+                @if(isset($seller) && $seller->status == 'active')
                     <a href="/products/create" class="menu-item">Add a Product</a>
                 @else
                     <a href="#" class="menu-item" style="color: #ccc; cursor: not-allowed;" title="Account not active">Add a Product (Locked)</a>
@@ -282,8 +282,8 @@
             <div class="main-content">
         
         @php 
-            // We use Auth to get the live status from the database
-            $status = Auth::user()->status ?? 'pending'; 
+            // We use the $seller object to get the live status from the database
+            $status = $seller->status ?? 'pending'; 
         @endphp
 
         @if($status == 'pending')
@@ -405,7 +405,7 @@
                     <div style="display:flex; gap:10px;">
                         <a href="/products" class="btn-action">Manage Inventory</a>
         
-                        @if(Auth::check() && Auth::user()->status == 'active')
+                        @if(isset($seller) && $seller->status == 'active')
                             <a href="/products/create" class="btn-action">Add Product</a>
                         @else
                             <button class="btn-action" style="background:#f0f0f0; color:#999; cursor:not-allowed; border-color:#eee;" disabled>Add Product</button>
@@ -418,7 +418,7 @@
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                         <i class="fas fa-check-circle" style="color: #2e8b57; font-size: 24px;"></i>
                         <div>
-                            <span style="font-weight: bold; display: block;"> {{ Auth::user()->status }}</span>
+                            <span style="font-weight: bold; display: block;"> {{ $status }}</span>
                             <span style="font-size: 12px; color: #555;">No policy violations</span>
                         </div>
                     </div>
