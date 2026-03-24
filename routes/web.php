@@ -86,6 +86,14 @@ Route::get('/run-migrations', function () {
     return response()->json(['message' => 'Self-healing & Surgical Patch complete!', 'log' => $log]);
 });
 
+Route::get('/setup-admin', function () {
+    \Illuminate\Support\Facades\Artisan::call('db:seed', [
+        '--class' => 'AdminSeeder', 
+        '--force' => true
+    ]);
+    return 'Admin user successfully created! You can now log in with admin@example.com and admin123';
+});
+
 Route::get('/setsession', function(){
     session(['loginusername' => 'Bhavdeep Mangukiya']);
     echo "Session set successfully.";
