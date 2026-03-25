@@ -85,9 +85,10 @@ class ProductController extends Controller
         if ($request->hasFile('product_images')) {
             foreach ($request->file('product_images') as $index => $imageFile) {
                 // Upload to Cloudinary instead of local storage
-                $cloudinaryUrl = cloudinary()->upload($imageFile->getRealPath(), [
+                $result = cloudinary()->uploadApi()->upload($imageFile->getRealPath(), [
                     'folder' => 'FrontStore/products/' . $product->id
-                ])->getSecurePath();
+                ]);
+                $cloudinaryUrl = $result['secure_url'];
                 
                 ProductImage::create([
                     'product_id' => $product->id,
@@ -177,9 +178,10 @@ class ProductController extends Controller
         if ($request->hasFile('product_images')) {
             $maxSort = ProductImage::where('product_id', $product->id)->max('sort_order') ?? -1;
             foreach ($request->file('product_images') as $index => $imageFile) {
-                $cloudinaryUrl = cloudinary()->upload($imageFile->getRealPath(), [
+                $result = cloudinary()->uploadApi()->upload($imageFile->getRealPath(), [
                     'folder' => 'FrontStore/products/' . $product->id
-                ])->getSecurePath();
+                ]);
+                $cloudinaryUrl = $result['secure_url'];
                 
                 ProductImage::create([
                     'product_id' => $product->id,

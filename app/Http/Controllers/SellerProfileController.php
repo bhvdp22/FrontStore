@@ -99,18 +99,20 @@ class SellerProfileController extends Controller
 
         // Handle banner_image upload
         if ($request->hasFile('banner_image')) {
-            $validated['banner_image'] = cloudinary()->upload($request->file('banner_image')->getRealPath(), [
+            $result = cloudinary()->uploadApi()->upload($request->file('banner_image')->getRealPath(), [
                 'folder' => 'FrontStore/storefront/banners'
-            ])->getSecurePath();
+            ]);
+            $validated['banner_image'] = $result['secure_url'];
         } else {
             unset($validated['banner_image']);
         }
 
         // Handle logo upload
         if ($request->hasFile('logo')) {
-            $validated['logo'] = cloudinary()->upload($request->file('logo')->getRealPath(), [
+            $result = cloudinary()->uploadApi()->upload($request->file('logo')->getRealPath(), [
                 'folder' => 'FrontStore/storefront/logos'
-            ])->getSecurePath();
+            ]);
+            $validated['logo'] = $result['secure_url'];
         } else {
             unset($validated['logo']);
         }

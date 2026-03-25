@@ -151,9 +151,10 @@ class ReturnController extends Controller
         $images = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $images[] = cloudinary()->upload($image->getRealPath(), [
+                $result = cloudinary()->uploadApi()->upload($image->getRealPath(), [
                     'folder' => 'FrontStore/returns'
-                ])->getSecurePath();
+                ]);
+                $images[] = $result['secure_url'];
             }
         }
 
@@ -292,8 +293,10 @@ class ReturnController extends Controller
         $attachments = [];
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
-                $path = $file->store('return-messages', 'public');
-                $attachments[] = $path;
+                $result = cloudinary()->uploadApi()->upload($file->getRealPath(), [
+                    'folder' => 'FrontStore/return-messages'
+                ]);
+                $attachments[] = $result['secure_url'];
             }
         }
 
