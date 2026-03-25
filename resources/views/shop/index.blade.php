@@ -958,7 +958,7 @@
                             </div>
                             <a href="{{ route('shop.product', $product->id) }}" style="text-decoration:none;">
                                 <div class="product-image">
-                                    <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" 
+                                    <img src="{{ str_starts_with($product->image, 'http') ? $product->image : asset($product->image) }}" alt="{{ $product->name }}" 
                                          onerror="this.onerror=null;this.src='https://placehold.co/200?text=No+Image';">
                                 </div>
                             </a>

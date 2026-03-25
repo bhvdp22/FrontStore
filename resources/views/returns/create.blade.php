@@ -210,7 +210,11 @@
         
         <div class="return-form-card">
             <div class="product-summary">
-                <img src="{{ $order->img_path ? asset($order->img_path) : ($product && $product->image ? asset($product->image) : asset('placeholder.png')) }}" alt="{{ $order->product_name }}">
+                @php
+                    $returnImgPath = $order->img_path ?: ($product && $product->image ? $product->image : null);
+                    $returnImgUrl = $returnImgPath ? (str_starts_with($returnImgPath, 'http') ? $returnImgPath : asset($returnImgPath)) : asset('placeholder.png');
+                @endphp
+                <img src="{{ $returnImgUrl }}" alt="{{ $order->product_name }}">
                 <div>
                     <h3>{{ $order->product_name }}</h3>
                     <p>Order #{{ $order->order_id }} • Purchased: {{ $order->created_at->format('M d, Y') }}</p>

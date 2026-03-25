@@ -186,7 +186,7 @@
                 <div class="image-grid" id="existingImages">
                     @foreach($existingImages as $img)
                         <div class="img-item {{ $img->is_primary ? 'is-primary' : '' }}" id="img-item-{{ $img->id }}">
-                            <img src="{{ asset($img->image_path) }}" alt="Product image" onerror="this.src='https://placehold.co/150?text=No+Image'">
+                            <img src="{{ str_starts_with($img->image_path, 'http') ? $img->image_path : asset($img->image_path) }}" alt="Product image" onerror="this.src='https://placehold.co/150?text=No+Image'">
                             <div class="img-actions">
                                 <label class="primary-radio">
                                     <input type="radio" name="primary_image" value="{{ $img->id }}" {{ $img->is_primary ? 'checked' : '' }}>

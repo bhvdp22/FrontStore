@@ -389,7 +389,7 @@
                                  onmouseenter="switchImage({{ $index }})" 
                                  onclick="switchImage({{ $index }})"
                                  id="thumb-{{ $index }}">
-                                <img src="{{ asset($img) }}" alt="{{ $product->name }}" 
+                                <img src="{{ str_starts_with($img, 'http') ? $img : asset($img) }}" alt="{{ $product->name }}" 
                                      onerror="this.src='https://placehold.co/60x60?text=No+Img'">
                             </div>
                         @endforeach
@@ -403,7 +403,7 @@
                         <button class="share-btn" onclick="shareProduct()" title="Share">
                             <i class="fas fa-share-alt"></i>
                         </button>
-                        <img src="{{ asset($allImages[0]) }}" 
+                        <img src="{{ str_starts_with($allImages[0], 'http') ? $allImages[0] : asset($allImages[0]) }}" 
                              alt="{{ $product->name }}" 
                              id="mainImage"
                              onerror="this.src='https://placehold.co/400x400?text=No+Image'">
@@ -571,7 +571,7 @@
         function switchImage(index) {
             currentIndex = index;
             const mainImg = document.getElementById('mainImage');
-            mainImg.src = '{{ asset("") }}' + allImages[index];
+            mainImg.src = allImages[index].startsWith('http') ? allImages[index] : '{{ asset("") }}' + allImages[index];
             mainImg.onerror = function() { this.src = 'https://placehold.co/400x400?text=No+Image'; };
 
             // Update active thumb
