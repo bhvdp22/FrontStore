@@ -151,8 +151,9 @@ class ReturnController extends Controller
         $images = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $path = $image->store('returns', 'public');
-                $images[] = $path;
+                $images[] = cloudinary()->upload($image->getRealPath(), [
+                    'folder' => 'FrontStore/returns'
+                ])->getSecurePath();
             }
         }
 

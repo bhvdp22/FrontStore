@@ -531,7 +531,7 @@
                             if (preg_match('/^https?:\/\//', $product->img_path)) {
                                 $imgSrc = $product->img_path;
                             } else {
-                                $imgSrc = asset('storage/' . ltrim($product->img_path, '/'));
+                                $imgSrc = str_starts_with($product->img_path, 'http') ? $product->img_path : asset('storage/' . ltrim($product->img_path, '/'));
                             }
                         }
                     @endphp
@@ -590,7 +590,7 @@
                             if (preg_match('/^https?:\/\//', $product->img_path)) {
                                 $imgSrc = $product->img_path;
                             } else {
-                                $imgSrc = asset('storage/' . ltrim($product->img_path, '/'));
+                                $imgSrc = str_starts_with($product->img_path, 'http') ? $product->img_path : asset('storage/' . ltrim($product->img_path, '/'));
                             }
                         }
                     @endphp

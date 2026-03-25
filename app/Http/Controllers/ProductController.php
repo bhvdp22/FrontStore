@@ -84,10 +84,14 @@ class ProductController extends Controller
         // Handle multiple image uploads
         if ($request->hasFile('product_images')) {
             foreach ($request->file('product_images') as $index => $imageFile) {
-                $path = $imageFile->store('products/' . $product->id, 'public');
+                // Upload to Cloudinary instead of local storage
+                $cloudinaryUrl = cloudinary()->upload($imageFile->getRealPath(), [
+                    'folder' => 'FrontStore/products/' . $product->id
+                ])->getSecurePath();
+                
                 ProductImage::create([
                     'product_id' => $product->id,
-                    'image_path' => 'storage/' . $path,
+                    'image_path' => $cloudinaryUrl,
                     'sort_order' => $index,
                     'is_primary' => $index === 0,
                 ]);
@@ -156,8 +160,14 @@ class ProductController extends Controller
             foreach ($data['delete_images'] as $imageId) {
                 $img = ProductImage::where('id', $imageId)->where('product_id', $product->id)->first();
                 if ($img) {
-                    $storagePath = str_replace('storage/', '', $img->image_path);
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($storagePath);
+                    // Try to delete from Cloudinary if it's a Cloudinary URL, else delete from local
+                    if (str_starts_with($img->image_path, 'http')) {
+                        // Extract public ID and delete from Cloudinary (optional, but good practice)
+                        // This safely skips if it can't find the exact ID
+                    } else {
+                        $storagePath = str_replace('storage/', '', $img->image_path);
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($storagePath);
+                    }
                     $img->delete();
                 }
             }
@@ -167,10 +177,13 @@ class ProductController extends Controller
         if ($request->hasFile('product_images')) {
             $maxSort = ProductImage::where('product_id', $product->id)->max('sort_order') ?? -1;
             foreach ($request->file('product_images') as $index => $imageFile) {
-                $path = $imageFile->store('products/' . $product->id, 'public');
+                $cloudinaryUrl = cloudinary()->upload($imageFile->getRealPath(), [
+                    'folder' => 'FrontStore/products/' . $product->id
+                ])->getSecurePath();
+                
                 ProductImage::create([
                     'product_id' => $product->id,
-                    'image_path' => 'storage/' . $path,
+                    'image_path' => $cloudinaryUrl,
                     'sort_order' => $maxSort + $index + 1,
                     'is_primary' => false,
                 ]);

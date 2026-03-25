@@ -406,8 +406,9 @@ class SellerReturnController extends Controller
         $attachments = [];
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
-                $path = $file->store('return-messages', 'public');
-                $attachments[] = $path;
+                $attachments[] = cloudinary()->upload($file->getRealPath(), [
+                    'folder' => 'FrontStore/return-messages'
+                ])->getSecurePath();
             }
         }
 

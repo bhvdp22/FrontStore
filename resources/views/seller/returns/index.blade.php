@@ -241,7 +241,7 @@
                                     $placeholder = 'https://placehold.co/50x50?text=No+Image';
                                     $img = $return->product->img_path ?? null;
                                     if ($img && !preg_match('/^https?:\/\//', $img)) {
-                                        $img = asset('storage/' . ltrim($img, '/'));
+                                        $img = str_starts_with($img, 'http') ? $img : asset('storage/' . ltrim($img, '/'));
                                     }
                                     if (!$img) {
                                         $img = 'https://m.media-amazon.com/images/I/41-a+x5eB+L._SX342_SY445_.jpg';

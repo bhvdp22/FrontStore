@@ -140,7 +140,7 @@
                                         } elseif (preg_match('/^\/storage\/|^storage\//', $item->img_path)) {
                                             $imgSrc = asset(ltrim($item->img_path, '/'));
                                         } else {
-                                            $imgSrc = asset('storage/' . ltrim($item->img_path, '/'));
+                                            $imgSrc = str_starts_with($item->img_path, 'http') ? $item->img_path : asset('storage/' . ltrim($item->img_path, '/'));
                                         }
                                     }
                                 @endphp

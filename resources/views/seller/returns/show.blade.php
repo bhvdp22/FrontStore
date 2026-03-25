@@ -465,7 +465,7 @@
                         
                         // If it's a local path, build a public URL
                         if ($img && !preg_match('/^https?:\/\//', $img)) {
-                            $img = asset('storage/' . ltrim($img, '/'));
+                            $img = str_starts_with($img, 'http') ? $img : asset('storage/' . ltrim($img, '/'));
                         }
                         
                         // Default fallback
