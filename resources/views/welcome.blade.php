@@ -423,6 +423,75 @@
                     </div>
                 </div>
 
+                {{-- Seller Reputation Card --}}
+                <div class="card">
+                    <h3><i class="fas fa-shield-alt" style="color: #007185; margin-right: 6px;"></i>Seller Reputation</h3>
+                    @php
+                        $repScore = Auth::user()->seller_reputation_score ?? 0;
+                        $repBadge = Auth::user()->seller_reputation_badge ?? 'New Seller';
+                        $repColor = match($repBadge) {
+                            'Trusted Seller' => '#1b5e20',
+                            'Reliable' => '#0d47a1',
+                            'Growing Seller' => '#e65100',
+                            'Needs Attention' => '#b71c1c',
+                            default => '#6a1b9a',
+                        };
+                        $repBg = match($repBadge) {
+                            'Trusted Seller' => '#e8f5e9',
+                            'Reliable' => '#e3f2fd',
+                            'Growing Seller' => '#fff3e0',
+                            'Needs Attention' => '#ffebee',
+                            default => '#f3e5f5',
+                        };
+                        $repIcon = match($repBadge) {
+                            'Trusted Seller' => 'fa-award',
+                            'Reliable' => 'fa-thumbs-up',
+                            'Growing Seller' => 'fa-chart-line',
+                            'Needs Attention' => 'fa-exclamation-triangle',
+                            default => 'fa-seedling',
+                        };
+                    @endphp
+
+                    {{-- Score Gauge --}}
+                    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 16px;">
+                        <div style="position: relative; width: 80px; height: 80px;">
+                            <svg viewBox="0 0 36 36" style="transform: rotate(-90deg); width: 80px; height: 80px;">
+                                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                      fill="none" stroke="#eee" stroke-width="3"/>
+                                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                      fill="none" stroke="{{ $repColor }}" stroke-width="3"
+                                      stroke-dasharray="{{ $repScore }}, 100"
+                                      stroke-linecap="round"/>
+                            </svg>
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 20px; font-weight: 800; color: {{ $repColor }};">
+                                {{ $repScore }}
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: inline-flex; align-items: center; gap: 6px; background: {{ $repBg }}; color: {{ $repColor }}; padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-bottom: 6px;">
+                                <i class="fas {{ $repIcon }}"></i> {{ $repBadge }}
+                            </div>
+                            <div style="font-size: 11px; color: #888;">out of 100</div>
+                        </div>
+                    </div>
+
+                    {{-- Score Factors --}}
+                    <div style="font-size: 12px; color: #555; border-top: 1px solid #eee; padding-top: 12px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span><i class="fas fa-shipping-fast" style="width: 16px; color: #007185;"></i> On-Time Delivery</span>
+                            <span style="font-weight: 600; color: #111;">Good</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span><i class="fas fa-undo-alt" style="width: 16px; color: #007185;"></i> Return Rate</span>
+                            <span style="font-weight: 600; color: #111;">Low</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><i class="fas fa-star" style="width: 16px; color: #007185;"></i> Customer Rating</span>
+                            <span style="font-weight: 600; color: #111;">{{ number_format(Auth::user()->seller_reputation_score / 20, 1) }}/5</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card">
                     <h3>News</h3>
                     <div style="font-size: 13px; margin-bottom: 10px; border-left: 3px solid #007185; padding-left: 10px;">
