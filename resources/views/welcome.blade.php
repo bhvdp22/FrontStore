@@ -427,8 +427,12 @@
                 <div class="card">
                     <h3><i class="fas fa-shield-alt" style="color: #007185; margin-right: 6px;"></i>Seller Reputation</h3>
                     @php
-                        $repScore = Auth::user()->seller_reputation_score ?? 0;
-                        $repBadge = Auth::user()->seller_reputation_badge ?? 'New Seller';
+                        $repService = app(\App\Services\SellerReputationService::class);
+                        $repData = $repService->calculate(Auth::id());
+                        $repScore = $repData['score'];
+                        $repBadge = $repData['badge'];
+                        $repBreakdown = $repData['breakdown'];
+                        
                         $repColor = match($repBadge) {
                             'Trusted Seller' => '#1b5e20',
                             'Reliable' => '#0d47a1',
@@ -450,6 +454,16 @@
                             'Needs Attention' => 'fa-exclamation-triangle',
                             default => 'fa-seedling',
                         };
+
+                        // Dynamic breakdown labels
+                        $fulfillRate = $repBreakdown['fulfillment_rate'];
+                        $deliveryLabel = $fulfillRate === null ? 'N/A' : ($fulfillRate >= 90 ? 'Excellent' : ($fulfillRate >= 70 ? 'Good' : 'Needs Work'));
+                        
+                        $returnRate = $repBreakdown['return_rate'];
+                        $returnLabel = $returnRate === null ? 'N/A' : ($returnRate <= 5 ? 'Low' : ($returnRate <= 15 ? 'Moderate' : 'High'));
+                        
+                        $avgRating = $repBreakdown['avg_rating'];
+                        $ratingLabel = $avgRating !== null ? number_format($avgRating, 1) . '/5' : 'No reviews';
                     @endphp
 
                     {{-- Score Gauge --}}
@@ -479,15 +493,15 @@
                     <div style="font-size: 12px; color: #555; border-top: 1px solid #eee; padding-top: 12px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
                             <span><i class="fas fa-shipping-fast" style="width: 16px; color: #007185;"></i> On-Time Delivery</span>
-                            <span style="font-weight: 600; color: #111;">Good</span>
+                            <span style="font-weight: 600; color: #111;">{{ $deliveryLabel }}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
                             <span><i class="fas fa-undo-alt" style="width: 16px; color: #007185;"></i> Return Rate</span>
-                            <span style="font-weight: 600; color: #111;">Low</span>
+                            <span style="font-weight: 600; color: #111;">{{ $returnLabel }}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
                             <span><i class="fas fa-star" style="width: 16px; color: #007185;"></i> Customer Rating</span>
-                            <span style="font-weight: 600; color: #111;">{{ number_format(Auth::user()->seller_reputation_score / 20, 1) }}/5</span>
+                            <span style="font-weight: 600; color: #111;">{{ $ratingLabel }}</span>
                         </div>
                     </div>
                 </div>
