@@ -26,6 +26,12 @@ class SendGridMailService
                 return false;
             }
 
+            $fromEmail = config('services.sendgrid.from_email');
+            if (!$fromEmail) {
+                Log::warning('SENDGRID_FROM_EMAIL not configured, skipping email to ' . $toEmail);
+                return false;
+            }
+
             $payload = [
                 'personalizations' => [
                     [
