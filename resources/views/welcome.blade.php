@@ -527,6 +527,7 @@
             <li><a href="#">Help</a></li>
         </ul>
         <p>&copy; 1996-2026, Seller Central, Inc. or its affiliates</p>
+        <p style="margin-top: 6px; font-size: 11px; color: #999; letter-spacing: 0.3px;">Developed by <a href="https://bhavdeep.me" target="_blank" rel="noopener" style="color: #007185; text-decoration: none; font-weight: 600;">bhavdeep.me</a></p>
     </footer>
 
     <script>

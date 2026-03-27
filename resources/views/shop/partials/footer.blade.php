@@ -39,6 +39,9 @@
             <a href="#">Refund Policy</a>
         </div>
     </div>
+    <div style="text-align:center; padding: 10px 0 14px; font-size: 11px; color: #a0aab3; letter-spacing: 0.3px;">
+        Developed by <a href="https://bhavdeep.me" target="_blank" rel="noopener" style="color: #febd69; text-decoration: none; font-weight: 600;">bhavdeep.me</a>
+    </div>
 </footer>
 
 <style>

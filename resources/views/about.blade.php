@@ -556,6 +556,7 @@
 
         <div class="footer-bottom">
             <p>&copy; 2026 Seller Central Platform. All rights reserved. | Powered by Laravel | <a href="/" style="color: #ff9900; text-decoration: none;">Privacy</a> | <a href="/" style="color: #ff9900; text-decoration: none;">Terms</a></p>
+            <p style="margin-top: 6px; font-size: 11px; color: #777; letter-spacing: 0.3px;">Developed by <a href="https://bhavdeep.me" target="_blank" rel="noopener" style="color: #ff9900; text-decoration: none; font-weight: 600;">bhavdeep.me</a></p>
         </div>
     </footer>
 
