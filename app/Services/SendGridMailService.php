@@ -34,8 +34,8 @@ class SendGridMailService
                     ]
                 ],
                 'from' => [
-                    'email' => 'mangukiyabhavdeep007@gmail.com',
-                    'name' => 'FrontStore Team',
+                    'email' => config('services.sendgrid.from_email', 'mangukiyabhavdeep007@gmail.com'),
+                    'name' => config('services.sendgrid.from_name', 'FrontStore Team'),
                 ],
                 'content' => [
                     ['type' => 'text/html', 'value' => $html],
