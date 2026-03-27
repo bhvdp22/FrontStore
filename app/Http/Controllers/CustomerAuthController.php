@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use Illuminate\Support\Facades\Http;
 
 class CustomerAuthController extends Controller
 {
@@ -22,34 +23,53 @@ class CustomerAuthController extends Controller
 
         $customer = Customer::create($data);
 
-        // Send welcome email using Resend SDK directly (HTTP API)
-        try {
-            $resendKey = config('resend.api_key') ?: env('RESEND_API_KEY');
-            
-            if ($resendKey) {
-                // Render the Blade template to HTML
-                $html = view('emails.welcome', ['customer' => $customer])->render();
-                
-                $resend = \Resend::client($resendKey);
-                $resend->emails->send([
-                    'from' => config('mail.from.name', 'FrontStore Team') . ' <' . config('mail.from.address', 'onboarding@resend.dev') . '>',
-                    'to' => [$customer->email],
-                    'subject' => 'Welcome to FrontStore! Here is your 10% Discount 🎉',
-                    'html' => $html,
-                ]);
-                
-                \Log::info('Welcome email sent to ' . $customer->email . ' via Resend');
-            } else {
-                \Log::warning('RESEND_API_KEY not configured, skipping welcome email for ' . $customer->email);
-            }
-        } catch (\Exception $e) {
-            \Log::error('Customer welcome email failed for ' . $customer->email . ': ' . $e->getMessage());
-        }
+        // Send welcome email via SendGrid HTTP API (no SMTP needed)
+        $this->sendWelcomeEmail($customer);
 
         session(['customer_email' => $customer->email, 'customer_name' => $customer->name, 'customer_id' => $customer->id]);
         $redirect = session('intended_url', route('shop.index'));
         session()->forget('intended_url');
         return redirect($redirect)->with('success', 'Welcome, '. $customer->name .'!');
+    }
+
+    private function sendWelcomeEmail(Customer $customer): void
+    {
+        try {
+            $apiKey = config('services.sendgrid.api_key') ?: env('SENDGRID_API_KEY');
+            
+            if (!$apiKey) {
+                \Log::warning('SENDGRID_API_KEY not configured, skipping welcome email for ' . $customer->email);
+                return;
+            }
+
+            $html = view('emails.welcome', ['customer' => $customer])->render();
+
+            $response = Http::withToken($apiKey)
+                ->timeout(10)
+                ->post('https://api.sendgrid.com/v3/mail/send', [
+                    'personalizations' => [
+                        [
+                            'to' => [['email' => $customer->email, 'name' => $customer->name]],
+                            'subject' => 'Welcome to FrontStore! Here is your 10% Discount 🎉',
+                        ]
+                    ],
+                    'from' => [
+                        'email' => config('mail.from.address', 'mangukiyabhavdeep007@gmail.com'),
+                        'name' => config('mail.from.name', 'FrontStore Team'),
+                    ],
+                    'content' => [
+                        ['type' => 'text/html', 'value' => $html],
+                    ],
+                ]);
+
+            if ($response->successful()) {
+                \Log::info('Welcome email sent to ' . $customer->email . ' via SendGrid');
+            } else {
+                \Log::error('SendGrid email failed for ' . $customer->email . ': ' . $response->body());
+            }
+        } catch (\Exception $e) {
+            \Log::error('Welcome email exception for ' . $customer->email . ': ' . $e->getMessage());
+        }
     }
 
     public function showLogin()
