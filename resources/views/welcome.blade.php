@@ -427,8 +427,9 @@
                 <div class="card">
                     <h3><i class="fas fa-shield-alt" style="color: #007185; margin-right: 6px;"></i>Seller Reputation</h3>
                     @php
-                        $repService = app(\App\Services\SellerReputationService::class);
-                        $repData = $seller ? $repService->calculate($seller->id) : ['score' => 0, 'badge' => 'New', 'breakdown' => ['on_time_delivery' => 0, 'return_rate' => 0, 'customer_rating' => 0]];
+                        $repData = $seller ? \Illuminate\Support\Facades\Cache::remember('rep_' . $seller->id, 300, function() use ($seller) {
+                            return app(\App\Services\SellerReputationService::class)->calculate($seller->id);
+                        }) : ['score' => 0, 'badge' => 'New', 'breakdown' => ['on_time_delivery' => 0, 'return_rate' => 0, 'customer_rating' => 0]];
                         $repScore = $repData['score'];
                         $repBadge = $repData['badge'];
                         $repBreakdown = $repData['breakdown'];

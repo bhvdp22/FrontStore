@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\User;
 use App\Models\Payout;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
@@ -19,104 +20,82 @@ class DashboardController extends Controller
         }
 
         $seller = $this->currentSeller();
-        $sellerSkus = $this->sellerSkus($seller);
+        $sellerId = $seller ? $seller->id : 0;
+        $cacheKey = 'dashboard_' . $sellerId;
 
-        // Get dates
-        $today = Carbon::today();
-        $sevenDaysAgo = Carbon::now()->subDays(7);
-        $thirtyDaysAgo = Carbon::now()->subDays(30);
+        // Cache dashboard data for 5 minutes (300 seconds)
+        $data = Cache::remember($cacheKey, 300, function () use ($seller) {
+            $sellerSkus = $this->sellerSkus($seller);
 
-        // Sales Summary - Today
-        $todayOrders = Order::whereDate('created_at', $today)
-            ->when($seller, function ($q) use ($sellerSkus) {
-                $q->whereIn('sku', $sellerSkus);
-            })
-            ->get();
-        $todaySales = $todayOrders->sum('total_price');
-        $todayUnits = $todayOrders->sum('quantity');
+            $today = Carbon::today();
+            $sevenDaysAgo = Carbon::now()->subDays(7);
+            $thirtyDaysAgo = Carbon::now()->subDays(30);
 
-        // Sales Summary - Last 7 Days
-        $last7DaysOrders = Order::where('created_at', '>=', $sevenDaysAgo)
-            ->when($seller, function ($q) use ($sellerSkus) {
-                $q->whereIn('sku', $sellerSkus);
-            })
-            ->get();
-        $last7DaysSales = $last7DaysOrders->sum('total_price');
-        $last7DaysUnits = $last7DaysOrders->sum('quantity');
+            // Sales Summary - Today
+            $todayOrders = Order::whereDate('created_at', $today)
+                ->when($seller, fn($q) => $q->whereIn('sku', $sellerSkus))
+                ->get();
 
-        // Sales Summary - Last 30 Days
-        $last30DaysOrders = Order::where('created_at', '>=', $thirtyDaysAgo)
-            ->when($seller, function ($q) use ($sellerSkus) {
-                $q->whereIn('sku', $sellerSkus);
-            })
-            ->get();
-        $last30DaysSales = $last30DaysOrders->sum('total_price');
-        $last30DaysUnits = $last30DaysOrders->sum('quantity');
+            // Sales Summary - Last 7 Days
+            $last7DaysOrders = Order::where('created_at', '>=', $sevenDaysAgo)
+                ->when($seller, fn($q) => $q->whereIn('sku', $sellerSkus))
+                ->get();
 
-        // Orders Statistics
-        $pendingOrders = Order::when($seller, function ($q) use ($sellerSkus) {
-                $q->whereIn('sku', $sellerSkus);
-            })
-            ->where('status', 'pending')
-            ->count();
+            // Sales Summary - Last 30 Days
+            $last30DaysOrders = Order::where('created_at', '>=', $thirtyDaysAgo)
+                ->when($seller, fn($q) => $q->whereIn('sku', $sellerSkus))
+                ->get();
 
-        $unshippedOrders = Order::when($seller, function ($q) use ($sellerSkus) {
-                $q->whereIn('sku', $sellerSkus);
-            })
-            ->where('status', 'unshipped')
-            ->count();
+            // Orders Statistics (3 queries → 1 query)
+            $orderCounts = Order::when($seller, fn($q) => $q->whereIn('sku', $sellerSkus))
+                ->selectRaw("
+                    SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
+                    SUM(CASE WHEN status = 'unshipped' THEN 1 ELSE 0 END) as unshipped,
+                    SUM(CASE WHEN status = 'returned' THEN 1 ELSE 0 END) as returned
+                ")
+                ->first();
 
-        $returnRequests = Order::when($seller, function ($q) use ($sellerSkus) {
-                $q->whereIn('sku', $sellerSkus);
-            })
-            ->where('status', 'returned')
-            ->count();
+            // Payments
+            $sellerOrderIds = $seller ? Order::whereIn('sku', $sellerSkus)->pluck('order_id') : collect();
+            $totalBalance = Payment::when($seller, fn($q) => $q->whereIn('order_id', $sellerOrderIds))
+                ->where('status', 'completed')
+                ->sum('amount');
 
-        // Payments
-        $sellerOrderIds = $seller ? Order::whereIn('sku', $sellerSkus)->pluck('order_id') : collect();
+            $nextPayoutDate = $seller ? (Payout::getNextPayoutDate($seller->id) ?? 'N/A') : 'N/A';
 
-        $totalBalance = Payment::when($seller, function ($q) use ($sellerOrderIds) {
-                $q->whereIn('order_id', $sellerOrderIds);
-            })
-            ->where('status', 'completed')
-            ->sum('amount');
+            // Inventory (2 queries → 1 query)
+            $inventory = Product::when($seller, fn($q) => $q->where('seller_id', $seller->id))
+                ->selectRaw("
+                    COUNT(*) as total,
+                    SUM(CASE WHEN quantity < 10 THEN 1 ELSE 0 END) as low_stock
+                ")
+                ->first();
 
-        // Next payout: use the Payout model's 7-day cycle
-        $nextPayoutDate = $seller ? (Payout::getNextPayoutDate($seller->id) ?? 'N/A') : 'N/A';
+            $last30DaysSales = $last30DaysOrders->sum('total_price');
+            $salesTarget = 50000;
 
-        // Inventory
-        $totalProducts = Product::when($seller, function ($q) use ($seller) {
-                $q->where('seller_id', $seller->id);
-            })
-            ->count();
+            return [
+                'todaySales' => $todayOrders->sum('total_price'),
+                'todayUnits' => $todayOrders->sum('quantity'),
+                'last7DaysSales' => $last7DaysOrders->sum('total_price'),
+                'last7DaysUnits' => $last7DaysOrders->sum('quantity'),
+                'last30DaysSales' => $last30DaysSales,
+                'last30DaysUnits' => $last30DaysOrders->sum('quantity'),
+                'pendingOrders' => (int) ($orderCounts->pending ?? 0),
+                'unshippedOrders' => (int) ($orderCounts->unshipped ?? 0),
+                'returnRequests' => (int) ($orderCounts->returned ?? 0),
+                'totalBalance' => $totalBalance,
+                'nextPayoutDate' => $nextPayoutDate,
+                'totalProducts' => (int) ($inventory->total ?? 0),
+                'lowStockProducts' => (int) ($inventory->low_stock ?? 0),
+                'salesPercentage' => $last30DaysSales > 0 ? min(($last30DaysSales / $salesTarget) * 100, 100) : 0,
+            ];
+        });
 
-        $lowStockProducts = Product::when($seller, function ($q) use ($seller) {
-                $q->where('seller_id', $seller->id);
-            })
-            ->where('quantity', '<', 10)
-            ->count();
+        // Merge seller into data for the view
+        $data['seller'] = $seller;
 
-        // Calculate sales percentage for progress bar (assuming target is ₹50,000 for 30 days)
-        $salesTarget = 50000;
-        $salesPercentage = $last30DaysSales > 0 ? min(($last30DaysSales / $salesTarget) * 100, 100) : 0;
-
-        return view('welcome', compact(
-            'todaySales',
-            'todayUnits',
-            'last7DaysSales',
-            'last7DaysUnits',
-            'last30DaysSales',
-            'last30DaysUnits',
-            'pendingOrders',
-            'unshippedOrders',
-            'returnRequests',
-            'totalBalance',
-            'nextPayoutDate',
-            'totalProducts',
-            'lowStockProducts',
-            'salesPercentage',
-            'seller'
-        ));
+        return view('welcome', $data);
     }
 
     private function currentSeller(): ?User
