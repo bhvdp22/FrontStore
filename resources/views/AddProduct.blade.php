@@ -254,9 +254,9 @@
             </div>
 
             <div class="form-group">
-                <label>ASIN <span class="required">*</span></label>
+                <label>FSIN <span class="required">*</span></label>
                 <input type="text" name="asin" value="{{ old('asin') }}" required placeholder="e.g., B08N5WRWNW">
-                <span class="help-text">Amazon Standard Identification Number</span>
+                <span class="help-text">FrontStore Standard Identification Number</span>
                 @error('asin') <span class="alert-error">{{ $message }}</span> @enderror
             </div>
         </div>
