@@ -289,6 +289,33 @@
         object-fit: contain;
         animation: float 3s ease-in-out infinite;
     }
+
+    .icon-3d-fallback {
+        width: 350px;
+        height: 350px;
+        border-radius: 24px;
+        background: radial-gradient(circle at 30% 20%, #ffe7bf 0%, #ffd28a 42%, #ffb74d 100%);
+        color: #232f3e;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        animation: float 3s ease-in-out infinite;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+        text-align: center;
+        padding: 20px;
+    }
+
+    .icon-3d-fallback i {
+        font-size: 56px;
+    }
+
+    .icon-3d-fallback span {
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+    }
     
     @keyframes float {
         0%, 100% { transform: translateY(0px); }
@@ -333,6 +360,12 @@
         }
 
         .icon-3d {
+            width: 280px;
+            height: 280px;
+            order: -1;
+        }
+
+        .icon-3d-fallback {
             width: 280px;
             height: 280px;
             order: -1;
@@ -415,7 +448,18 @@
         </div>
 
         <!-- 3D Icon -->
-        <img src="{{ asset('storage/3d-casual-life-online-shopping-on-mobile-phone.png') }}" alt="3D Shopping Icon" class="icon-3d">
+        <div>
+            <img
+                src="{{ asset('images/seller-login-3d-icon.svg') }}"
+                alt="3D Shopping Icon"
+                class="icon-3d"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            >
+            <div class="icon-3d-fallback">
+                <i class="fas fa-store"></i>
+                <span>FrontStore Seller Central</span>
+            </div>
+        </div>
     </div>
 
     <div class="page-footer">
