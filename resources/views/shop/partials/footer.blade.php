@@ -16,7 +16,7 @@
             </div>
             <div class="footer-links-col">
                 <div class="footer-col-title">Customer Care</div>
-                <a href="mailto:support@frontstore.com" class="footer-link"><i class="fas fa-envelope"></i> support@frontstore.com</a>
+                <a href="mailto:frontstore.team@outlook.com" class="footer-link"><i class="fas fa-envelope"></i> frontstore.team@outlook.com</a>
                 <a href="tel:1800-123-4567" class="footer-link"><i class="fas fa-phone"></i> 1800-123-4567</a>
                 <a href="{{ route('page.return-policy') }}" class="footer-link"><i class="fas fa-undo-alt"></i> Return Policy</a>
                 <a href="{{ route('page.refund-policy') }}" class="footer-link"><i class="fas fa-wallet"></i> Refund Policy</a>

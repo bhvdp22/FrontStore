@@ -14,7 +14,7 @@
         .header-card { background: linear-gradient(135deg, #0f3a5c 0%, #1f4f75 100%); color: #fff; border-radius: 14px; padding: 30px 28px; margin-bottom: 24px; }
         .header-card h1 { font-size: 30px; display: flex; gap: 12px; align-items: center; margin-bottom: 8px; }
         .header-card h1 i { color: #7dd3fc; }
-        .header-card p { font-size: 14px; opacity: 0.92; }
+        .header-card p { font-size: 14px; color: #e7f4ff !important; opacity: 1; text-shadow: 0 1px 1px rgba(0,0,0,0.22); }
         .policy-card { background: #fff; border-radius: 14px; box-shadow: 0 6px 22px rgba(0,0,0,0.08); padding: 28px; }
         h2 { font-family: 'Montserrat', sans-serif; font-size: 20px; color: #1f2937; margin: 22px 0 10px; border-bottom: 2px solid #7dd3fc; display: inline-block; padding-bottom: 6px; }
         h2:first-of-type { margin-top: 0; }

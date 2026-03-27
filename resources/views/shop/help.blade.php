@@ -568,7 +568,7 @@
                 <a href="#" class="contact-btn primary">
                     <i class="fas fa-comment-dots"></i> Live Chat
                 </a>
-                <a href="mailto:support@frontstore.com" class="contact-btn secondary">
+                <a href="mailto:frontstore.team@outlook.com" class="contact-btn secondary">
                     <i class="fas fa-envelope"></i> Email Support
                 </a>
                 <a href="tel:1800-123-4567" class="contact-btn outline">

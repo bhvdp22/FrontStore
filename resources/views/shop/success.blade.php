@@ -104,7 +104,7 @@
 
             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #565959;">
                 <p>Need help? Contact our support team</p>
-                <p><i class="fas fa-phone"></i> +91-1800-123-4567 | <i class="fas fa-envelope"></i> support@frontstore.com</p>
+                <p><i class="fas fa-phone"></i> +91-1800-123-4567 | <i class="fas fa-envelope"></i> frontstore.team@outlook.com</p>
             </div>
         </div>
     </div>

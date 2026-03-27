@@ -250,7 +250,7 @@
         <div class="footer">
             <div class="footer-note">
                 This is a computer-generated invoice and does not require a physical signature.<br>
-                For queries regarding this invoice, contact us at support@frontstore.com
+                For queries regarding this invoice, contact us at frontstore.team@outlook.com
             </div>
             <div class="footer-brand">
                 FrontStore Marketplace &mdash; Thank you for your purchase!

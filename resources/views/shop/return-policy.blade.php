@@ -56,7 +56,9 @@
         .page-header h1 i { color: #febd69; }
         .page-header .subtitle {
             font-size: 14px;
-            opacity: 0.85;
+            opacity: 1;
+            color: #e9eff8;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
             position: relative;
         }
 
