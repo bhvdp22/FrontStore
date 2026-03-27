@@ -536,7 +536,7 @@ class ShopController extends Controller
                         'fees' => $totalFees,
                     ];
 
-                    $html = view('emails.order-confirmation', $orderData)->render();
+                    $html = view('emails.order-confirmation', ['orderData' => $orderData])->render();
                     $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('emails.order-invoice-pdf', $orderData);
 
                     \App\Services\SendGridMailService::send(
