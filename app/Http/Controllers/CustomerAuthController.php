@@ -24,17 +24,12 @@ class CustomerAuthController extends Controller
 
         $customer = Customer::create($data);
 
-        // Send welcome email after HTTP response is sent (prevents 502 timeout)
-        $customerEmail = $customer->email;
-        $customerCopy = $customer->toArray();
-        app()->terminating(function () use ($customerEmail, $customerCopy) {
-            try {
-                $customer = new \App\Models\Customer($customerCopy);
-                Mail::to($customerEmail)->send(new WelcomeCustomerMail($customer));
-            } catch (\Exception $e) {
-                \Log::error('Customer welcome email failed for ' . $customerEmail . ': ' . $e->getMessage());
-            }
-        });
+        // Send welcome email via Resend (HTTP-based, no SMTP timeout)
+        try {
+            Mail::to($customer->email)->send(new WelcomeCustomerMail($customer));
+        } catch (\Exception $e) {
+            \Log::error('Customer welcome email failed for ' . $customer->email . ': ' . $e->getMessage());
+        }
 
         session(['customer_email' => $customer->email, 'customer_name' => $customer->name, 'customer_id' => $customer->id]);
         $redirect = session('intended_url', route('shop.index'));
