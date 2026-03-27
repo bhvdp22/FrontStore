@@ -191,9 +191,17 @@
     <div class="container">
         <div class="page-header">
             <h1 class="page-title"><i class="fas fa-undo-alt"></i> My Returns</h1>
-            <a href="{{ route('returns.eligible') }}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Request New Return
-            </a>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+                <a href="{{ route('page.return-policy') }}" class="btn" style="background:#fff;color:#374151;border:1px solid #e5e7eb;">
+                    <i class="fas fa-file-lines"></i> Return Policy
+                </a>
+                <a href="{{ route('page.refund-policy') }}" class="btn" style="background:#fff;color:#374151;border:1px solid #e5e7eb;">
+                    <i class="fas fa-wallet"></i> Refund Policy
+                </a>
+                <a href="{{ route('returns.eligible') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Request New Return
+                </a>
+            </div>
         </div>
         
         @if(session('success'))

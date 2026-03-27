@@ -395,7 +395,9 @@
                     </button>
 
                     <p class="legal-text">
-                        By continuing, you agree to Seller Central's <a href="#">Conditions of Use</a> and <a href="#">Privacy Notice</a>.
+                        By continuing, you agree to FrontStore's
+                        <a href="{{ route('page.disclaimer') }}">Disclaimer</a> and
+                        <a href="{{ route('page.privacy-policy') }}">Privacy Policy</a>.
                     </p>
 
                     <div class="help-link">
@@ -417,8 +419,10 @@
     </div>
 
     <div class="page-footer">
-        <a href="#">Conditions of Use</a>
-        <a href="#">Privacy Notice</a>
+        <a href="{{ route('page.return-policy') }}">Return Policy</a>
+        <a href="{{ route('page.refund-policy') }}">Refund Policy</a>
+        <a href="{{ route('page.privacy-policy') }}">Privacy Policy</a>
+        <a href="{{ route('page.disclaimer') }}">Disclaimer</a>
         <a href="#">Help</a>
         <div class="copyright">© 1996-2025, Seller Central, Inc. or its affiliates</div>
     </div>

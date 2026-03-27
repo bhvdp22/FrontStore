@@ -16,6 +16,8 @@
 </head>
 <body>
 
+@include('shop.partials.navbar')
+
 <div style="max-width:700px;margin:40px auto;padding:0 16px;">
     <a href="{{ route('returns.show', $return->id) }}" style="color:#3b82f6;font-size:14px;">&larr; Back to Return Details</a>
     
@@ -100,7 +102,18 @@
         <p style="font-size:14px;color:#6b7280;">Refund has not been initiated yet.</p>
     </div>
     @endif
+
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;">
+        <p style="font-size:13px;color:#6b7280;line-height:1.7;margin:0;">
+            Need policy details?
+            <a href="{{ route('page.return-policy') }}" style="font-weight:600;">Return Policy</a> |
+            <a href="{{ route('page.refund-policy') }}" style="font-weight:600;">Refund Policy</a> |
+            <a href="{{ route('page.privacy-policy') }}" style="font-weight:600;">Privacy Policy</a>
+        </p>
+    </div>
 </div>
+
+@include('shop.partials.footer')
 
 </body>
 </html>

@@ -690,6 +690,14 @@
                         </button>
                     </div>
                 </div>
+
+                <div style="margin: 0 30px 20px 30px; font-size: 12px; color: #6b7280; line-height: 1.7;">
+                    By creating a seller account, you agree to the
+                    <a href="{{ route('page.return-policy') }}" style="color:#0066c0;text-decoration:none;font-weight:600;">Return Policy</a>,
+                    <a href="{{ route('page.refund-policy') }}" style="color:#0066c0;text-decoration:none;font-weight:600;">Refund Policy</a>,
+                    <a href="{{ route('page.privacy-policy') }}" style="color:#0066c0;text-decoration:none;font-weight:600;">Privacy Policy</a>, and
+                    <a href="{{ route('page.disclaimer') }}" style="color:#0066c0;text-decoration:none;font-weight:600;">Disclaimer</a>.
+                </div>
             </form>
 
             <!-- Footer -->

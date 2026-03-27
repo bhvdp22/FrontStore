@@ -182,6 +182,14 @@
                         <strong>Note:</strong> All orders will be processed within 1-2 business days. You will receive tracking information via email once shipped.
                     </div>
 
+                    <div style="font-size:12px;color:#565959;line-height:1.7;margin:10px 0 16px;">
+                        By placing this order, you agree to FrontStore's
+                        <a href="{{ route('page.return-policy') }}" style="color:#007185;font-weight:600;text-decoration:none;">Return Policy</a>,
+                        <a href="{{ route('page.refund-policy') }}" style="color:#007185;font-weight:600;text-decoration:none;">Refund Policy</a>,
+                        <a href="{{ route('page.privacy-policy') }}" style="color:#007185;font-weight:600;text-decoration:none;">Privacy Policy</a>, and
+                        <a href="{{ route('page.disclaimer') }}" style="color:#007185;font-weight:600;text-decoration:none;">Disclaimer</a>.
+                    </div>
+
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
                     <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
                     <input type="hidden" name="razorpay_signature" id="razorpay_signature">

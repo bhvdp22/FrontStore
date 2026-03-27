@@ -280,6 +280,12 @@
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-paper-plane"></i> Submit Return Request
                     </button>
+                    <p style="margin-top:12px;font-size:12px;color:#6b7280;line-height:1.7;">
+                        This request follows FrontStore's
+                        <a href="{{ route('page.return-policy') }}" style="color:#007185;font-weight:600;text-decoration:none;">Return Policy</a>
+                        and
+                        <a href="{{ route('page.refund-policy') }}" style="color:#007185;font-weight:600;text-decoration:none;">Refund Policy</a>.
+                    </p>
                 </div>
             </form>
         </div>

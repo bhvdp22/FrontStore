@@ -521,6 +521,12 @@
                         </button>
                     </form>
                     @endif
+
+                    <div style="margin-top:16px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:12px;line-height:1.7;color:#6b7280;">
+                        Policy references:
+                        <a href="{{ route('page.return-policy') }}" style="color:#007185;font-weight:600;text-decoration:none;">Return Policy</a> |
+                        <a href="{{ route('page.refund-policy') }}" style="color:#007185;font-weight:600;text-decoration:none;">Refund Policy</a>
+                    </div>
                 </div>
                 
                 <div class="sidebar-card">

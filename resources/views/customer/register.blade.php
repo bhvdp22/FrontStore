@@ -122,6 +122,21 @@
       color: #c7511f;
       text-decoration: underline;
     }
+    .legal-links {
+      font-size: 12px;
+      line-height: 1.6;
+      color: #6b7280;
+      text-align: center;
+      margin-top: 12px;
+    }
+    .legal-links a {
+      color: #007185;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .legal-links a:hover {
+      text-decoration: underline;
+    }
     @media (max-width: 600px) {
       .register-card {
         padding: 22px 8px 18px 8px;
@@ -161,6 +176,13 @@
       <button type="submit" class="btn"><i class="fas fa-user-plus"></i> Register</button>
     </form>
     <div class="helper">Already have an account? <a href="{{ route('customer.login') }}">Login</a></div>
+    <div class="legal-links">
+      By creating an account, you agree to our
+      <a href="{{ route('page.return-policy') }}">Return Policy</a>,
+      <a href="{{ route('page.refund-policy') }}">Refund Policy</a>,
+      <a href="{{ route('page.privacy-policy') }}">Privacy Policy</a>, and
+      <a href="{{ route('page.disclaimer') }}">Disclaimer</a>.
+    </div>
   </div>
 </body>
 </html>

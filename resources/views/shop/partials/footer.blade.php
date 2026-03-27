@@ -18,6 +18,10 @@
                 <div class="footer-col-title">Customer Care</div>
                 <a href="mailto:support@frontstore.com" class="footer-link"><i class="fas fa-envelope"></i> support@frontstore.com</a>
                 <a href="tel:1800-123-4567" class="footer-link"><i class="fas fa-phone"></i> 1800-123-4567</a>
+                <a href="{{ route('page.return-policy') }}" class="footer-link"><i class="fas fa-undo-alt"></i> Return Policy</a>
+                <a href="{{ route('page.refund-policy') }}" class="footer-link"><i class="fas fa-wallet"></i> Refund Policy</a>
+                <a href="{{ route('page.privacy-policy') }}" class="footer-link"><i class="fas fa-user-shield"></i> Privacy Policy</a>
+                <a href="{{ route('page.disclaimer') }}" class="footer-link"><i class="fas fa-scale-balanced"></i> Disclaimer</a>
             </div>
             <div class="footer-links-col">
                 <div class="footer-col-title">Follow Us</div>
@@ -32,11 +36,11 @@
     <div class="footer-bottom-bar">
         <div>© {{ date('Y') }} FrontStore. All rights reserved.</div>
         <div class="footer-bottom-links">
-            <a href="#">Privacy</a>
+            <a href="{{ route('page.privacy-policy') }}">Privacy</a>
             <span>•</span>
-            <a href="#">Terms</a>
+            <a href="{{ route('page.disclaimer') }}">Disclaimer</a>
             <span>•</span>
-            <a href="#">Refund Policy</a>
+            <a href="{{ route('page.refund-policy') }}">Refund Policy</a>
         </div>
     </div>
     <div style="text-align:center; padding: 10px 0 14px; font-size: 11px; color: #a0aab3; letter-spacing: 0.3px;">

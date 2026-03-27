@@ -122,6 +122,21 @@
       color: #c7511f;
       text-decoration: underline;
     }
+    .legal-links {
+      font-size: 12px;
+      line-height: 1.6;
+      color: #6b7280;
+      text-align: center;
+      margin-top: 12px;
+    }
+    .legal-links a {
+      color: #007185;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .legal-links a:hover {
+      text-decoration: underline;
+    }
     @media (max-width: 600px) {
       .login-card {
         padding: 22px 8px 18px 8px;
@@ -157,6 +172,13 @@
       <button type="submit" class="btn"><i class="fas fa-sign-in-alt"></i> Login</button>
     </form>
     <div class="helper">New here? <a href="{{ route('customer.register') }}">Create account</a></div>
+    <div class="legal-links">
+      Continue using FrontStore with our
+      <a href="{{ route('page.return-policy') }}">Return Policy</a>,
+      <a href="{{ route('page.refund-policy') }}">Refund Policy</a>,
+      <a href="{{ route('page.privacy-policy') }}">Privacy Policy</a>, and
+      <a href="{{ route('page.disclaimer') }}">Disclaimer</a>.
+    </div>
   </div>
 </body>
 </html>

@@ -158,6 +158,12 @@ Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('pr
 
 Route::get('/help', [HelpController::class, 'index'])->name('help');
 
+// Public policy pages
+Route::view('/return-policy', 'shop.return-policy')->name('page.return-policy');
+Route::view('/refund-policy', 'shop.refund-policy')->name('page.refund-policy');
+Route::view('/privacy-policy', 'shop.privacy-policy')->name('page.privacy-policy');
+Route::view('/disclaimer', 'shop.disclaimer')->name('page.disclaimer');
+
 // Orders
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
