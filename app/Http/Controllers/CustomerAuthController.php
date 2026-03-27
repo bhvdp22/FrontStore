@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Customer;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\WelcomeCustomerMail;
 
 class CustomerAuthController extends Controller
 {
@@ -24,9 +22,26 @@ class CustomerAuthController extends Controller
 
         $customer = Customer::create($data);
 
-        // Send welcome email via Resend (HTTP-based, no SMTP timeout)
+        // Send welcome email using Resend SDK directly (HTTP API)
         try {
-            Mail::to($customer->email)->send(new WelcomeCustomerMail($customer));
+            $resendKey = config('resend.api_key') ?: env('RESEND_API_KEY');
+            
+            if ($resendKey) {
+                // Render the Blade template to HTML
+                $html = view('emails.welcome', ['customer' => $customer])->render();
+                
+                $resend = \Resend::client($resendKey);
+                $resend->emails->send([
+                    'from' => config('mail.from.name', 'FrontStore Team') . ' <' . config('mail.from.address', 'onboarding@resend.dev') . '>',
+                    'to' => [$customer->email],
+                    'subject' => 'Welcome to FrontStore! Here is your 10% Discount 🎉',
+                    'html' => $html,
+                ]);
+                
+                \Log::info('Welcome email sent to ' . $customer->email . ' via Resend');
+            } else {
+                \Log::warning('RESEND_API_KEY not configured, skipping welcome email for ' . $customer->email);
+            }
         } catch (\Exception $e) {
             \Log::error('Customer welcome email failed for ' . $customer->email . ': ' . $e->getMessage());
         }
