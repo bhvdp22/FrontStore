@@ -54,8 +54,8 @@ class CustomerAuthController extends Controller
                         ]
                     ],
                     'from' => [
-                        'email' => config('mail.from.address', 'mangukiyabhavdeep007@gmail.com'),
-                        'name' => config('mail.from.name', 'FrontStore Team'),
+                        'email' => 'mangukiyabhavdeep007@gmail.com',
+                        'name' => 'FrontStore Team',
                     ],
                     'content' => [
                         ['type' => 'text/html', 'value' => $html],
