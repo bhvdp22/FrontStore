@@ -126,12 +126,12 @@
 
             <h2>10. Contact</h2>
             <ul>
-                <li>Business Name: [Business Name]</li>
-                <li>Registered Address: [Registered Address]</li>
-                <li>Privacy Contact Email: [Privacy Contact Email]</li>
+                <li>Business Name: FrontStore</li>
+                <li>Registered Address: Surat, Gujarat.</li>
+                <li>Privacy Contact Email: frontstore.team@outlook.com</li>
             </ul>
 
-            <div class="footer-line">Last Updated: [Last Updated Date]</div>
+            <div class="footer-line">Last Updated: March 27, 2026</div>
         </div>
     </div>
 

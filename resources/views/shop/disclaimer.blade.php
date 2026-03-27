@@ -85,12 +85,12 @@
 
             <h2>11. Contact</h2>
             <ul>
-                <li>Business Name: [Business Name]</li>
-                <li>Support Email: [Support Email]</li>
-                <li>Registered Address: [Registered Address]</li>
+                <li>Business Name: FrontStore</li>
+                <li>Support Email: frontstore.team@outlook.com</li>
+                <li>Registered Address: Surat, Gujarat.</li>
             </ul>
 
-            <div class="footer-line">Last Updated: [Last Updated Date]</div>
+            <div class="footer-line">Last Updated: March 27, 2026</div>
         </div>
     </div>
 

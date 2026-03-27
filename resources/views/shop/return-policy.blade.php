@@ -300,7 +300,7 @@
             <p style="margin-top: 20px;">For refund details after a return, please see our <a href="{{ route('page.refund-policy') }}" class="cross-link"><i class="fas fa-arrow-right"></i> Refund Policy</a>.</p>
 
             <div class="policy-footer">
-                Last Updated: [Last Updated Date] &nbsp;|&nbsp; Questions? Contact us at [Support Email]
+                Last Updated: March 27, 2026 &nbsp;|&nbsp; Questions? Contact us at frontstore.team@outlook.com
             </div>
         </div>
 

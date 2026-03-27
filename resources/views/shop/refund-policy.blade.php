@@ -120,8 +120,8 @@
             <h2>10. Contact and Escalation</h2>
             <p>If your refund is delayed beyond expected timelines, contact support with your order and return/refund number.</p>
             <ul>
-                <li>Support Email: [Support Email]</li>
-                <li>Business Name: [Business Name]</li>
+                <li>Support Email: frontstore.team@outlook.com</li>
+                <li>Business Name: FrontStore</li>
                 <li>Escalation Window: [Escalation Window]</li>
             </ul>
 
@@ -131,7 +131,7 @@
                 <a href="{{ route('page.disclaimer') }}">Disclaimer</a>
             </div>
 
-            <div class="footer-line">Last Updated: [Last Updated Date]</div>
+            <div class="footer-line">Last Updated: March 27, 2026</div>
         </div>
     </div>
 
