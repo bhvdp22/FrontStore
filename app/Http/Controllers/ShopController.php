@@ -536,7 +536,23 @@ class ShopController extends Controller
                         'fees' => $totalFees,
                     ];
 
-                    Mail::to($validated['customer_email'])->send(new OrderConfirmationMail($orderData));
+                    $html = view('emails.order-confirmation', $orderData)->render();
+                    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('emails.order-invoice-pdf', $orderData);
+
+                    \App\Services\SendGridMailService::send(
+                        $validated['customer_email'],
+                        $validated['customer_name'],
+                        'Order Confirmed! 🎉 Your FrontStore Order #' . $orderId,
+                        $html,
+                        [
+                            [
+                                'content' => base64_encode($pdf->output()),
+                                'filename' => 'Invoice-' . $orderId . '.pdf',
+                                'type' => 'application/pdf',
+                                'disposition' => 'attachment',
+                            ]
+                        ]
+                    );
                 } catch (\Exception $mailEx) {
                     \Log::error('Order confirmation email failed: ' . $mailEx->getMessage());
                 }

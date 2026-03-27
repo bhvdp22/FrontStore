@@ -61,10 +61,16 @@ class RegisterController extends Controller
             'cin' => $data['cin'] ?? null,
         ]);
 
-        // Send welcome email to the new seller
+        // Send welcome email to the new seller via SendGrid
         if ($user->email) {
             try {
-                Mail::to($user->email)->send(new WelcomeSellerMail($user));
+                $html = view('emails.welcome-seller', ['user' => $user])->render();
+                \App\Services\SendGridMailService::send(
+                    $user->email,
+                    $user->name,
+                    'Welcome to FrontStore Seller Portal! 🚀',
+                    $html
+                );
             } catch (\Exception $e) {
                 \Log::error('Seller welcome email failed for ' . $user->email . ': ' . $e->getMessage());
             }
