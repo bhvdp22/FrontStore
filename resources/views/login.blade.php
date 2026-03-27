@@ -434,7 +434,7 @@
                     </p>
 
                     <div class="help-link">
-                        <a href="{{ route('page.help') }}"><i class="fas fa-question-circle"></i> Need help?</a>
+                        <a href="{{ route('help') }}"><i class="fas fa-question-circle"></i> Need help?</a>
                     </div>
                 </div>
             </form>
@@ -467,7 +467,7 @@
         <a href="{{ route('page.refund-policy') }}">Refund Policy</a>
         <a href="{{ route('page.privacy-policy') }}">Privacy Policy</a>
         <a href="{{ route('page.disclaimer') }}">Disclaimer</a>
-        <a href="{{ route('page.help') }}">Help</a>
+        <a href="{{ route('help') }}">Help</a>
         <div class="copyright">© 1996-2025, Seller Central, Inc. or its affiliates</div>
     </div>
 
