@@ -68,7 +68,7 @@ class RegisterController extends Controller
                 \App\Services\SendGridMailService::send(
                     $user->email,
                     $user->name,
-                    'Welcome to FrontStore Seller Portal! 🚀',
+                    'Welcome to FrontStore Seller Portal',
                     $html
                 );
             } catch (\Exception $e) {

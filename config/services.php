@@ -26,6 +26,8 @@ return [
         'api_key' => env('SENDGRID_API_KEY'),
         'from_email' => env('SENDGRID_FROM_EMAIL'),
         'from_name' => env('SENDGRID_FROM_NAME', 'FrontStore Team'),
+        'reply_to_email' => env('SENDGRID_REPLY_TO_EMAIL'),
+        'reply_to_name' => env('SENDGRID_REPLY_TO_NAME', 'FrontStore Team'),
     ],
 
     'ses' => [
